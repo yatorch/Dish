@@ -25,3 +25,6 @@ def get_latest_mclose_date():
         return date_today
     else:
         return dt.datetime.combine(nasdaq_schedule.index[-1].date(), dt.time.min)
+
+def filter_stocks_close(df):
+    return df['Close']
