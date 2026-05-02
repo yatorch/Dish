@@ -1,7 +1,8 @@
-# Decorators for logging purposes
+# Decorators for logging purposes, and dataframe melting for multi-index dfs
 import time
 from colorama import Fore, Style
 from functools import wraps
+import pandas as pd
 import asyncio
 
 # Anything on the yfinance API needs to be non-async, due to the API's usage of the requests library UTH

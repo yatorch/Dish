@@ -57,6 +57,8 @@ def test_collect_stocks():
     dataset_time_difference = exercise_data.index[-1] - exercise_data.index[0]
 
     period_truth = actual_time_difference == dataset_time_difference
+    
+    print(f"Dataframe columns:\n{exercise_data.columns}")
 
     assert column_truth and period_truth
 
@@ -108,3 +110,26 @@ def test_filter_daily_close_returns(test_stock_data):
 #     total_geo_growth = ((df_augmented['Return'][random_stock] + 1).prod()) - 1
     
 #     assert c_initial_price * (1 + total_geo_growth) == c_final_price
+
+def test_melt_yf_df(test_stock_data):
+    # Exercise: Melt the dataframe into a date + ticker organized one
+    print(f"columns: {test_stock_data.columns}")
+    print(f"index: {test_stock_data.index}")
+    print(f"col level price: {test_stock_data.columns.get_level_values('Price')}")
+    print(f"col level ticker: {test_stock_data.columns.get_level_values('Ticker')}")
+    df_molten = utils.melt_yf_df(test_stock_data)
+    
+    # Verification: Verify that it is correctly uni-dimensional and has all columns
+    c_cols = ['Date', 'Ticker', 'Open', 'High', 'Low', 'Close', 'Volume']
+    our_cols = list(df_molten.columns)
+    
+    # t_price_cols = test_stock_data.columns.get_level_values('Price')
+    # t_ticker_cols = test_stock_data.columns.get_level_values('Ticker')
+    # t_cols = t_price_cols + t_ticker_cols + ['Date']
+    
+    print(f"our cols:\n{our_cols}\n c_cols:\n {c_cols}")
+    
+    print(Fore.LIGHTYELLOW_EX + f"Stacked dataframe head: \n{df_molten.head(10)}")
+    print(Fore.LIGHTYELLOW_EX + f"Stacked dataframe tail: \n{df_molten.head(10)}")
+    
+    assert all(val in our_cols for val in c_cols)

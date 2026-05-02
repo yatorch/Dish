@@ -32,10 +32,31 @@ def filter_stocks_close(df):
 # Returns a copy of the dataframe that only has daily close returns for each security
 def filter_daily_close_return(df):
     df_copy = df.copy()
-    df_dcr = df_copy['Close'].pct_change().dropna().bfill().ffill()
+    df_dcr = df_copy['Close'].pct_change().dropna()
     return df_dcr
 
 # Adds a returns column to the 2d yf.downloads() df that has returns on closes for each security
 def add_daily_close_return(df):
     df['Return'] = df['Close'].pct_change()
     return df
+
+# Melts the yf.download() multi-index df into a long (wide) dataframe with tickers in a column
+# only_keep takes either the string "all" so it keeps all yf.download() headers, OR it takes a list
+# of headers to keep, eg keep_all=["Close"] will only keep closing price columns apart from ticker + date
+
+# Column structure with adjusted=True is as follows
+# [Close, High, Low, Open, Volume]
+# names=['Price', 'Ticker']
+
+def melt_yf_df(df, only_keep="all"):
+    copy = df.copy()
+    
+    tickers = list(copy.columns.get_level_values('Ticker').unique())
+    price_cols = list(copy.columns.get_level_values('Price').unique())
+    dates = list(copy.index.get_level_values(0).unique())
+    
+    # clean_df = pd.melt(copy, id_vars=['Date'] + tickers, value_vars=price_cols)
+    # clean_df = pd.melt(copy, id_vars=copy.index, value_vars=tickers + price_cols)
+    #level = 1 chooses 'Ticker' and makes a column out of that by stacking on the index axis (y)
+    clean_df = copy.stack(level=1).reset_index()
+    return clean_df
