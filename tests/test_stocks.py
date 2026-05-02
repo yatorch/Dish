@@ -28,7 +28,9 @@ test_stocks = [all_tickers[random.randint(0, 94) + i] for i in range(no_stocks +
 print(Fore.CYAN + f"Chosen stocks: {" and ".join(test_stocks)}")
 
 all_periods = ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
-test_period = all_periods[random.randint(0, len(all_periods) - 1)]
+# We don't pick the 1d period for obvious reasons - too short for tests like returns etc
+test_period = all_periods[random.randint(1, len(all_periods) - 1)]
+print(Fore.CYAN + f"Chosen period: {test_period}")
 
 
 @pytest.fixture(scope="module")
@@ -68,6 +70,41 @@ def test_filter_stocks_close(test_stock_data):
     tickers_truth = all(ticker in test_stocks for ticker in close_data_tickers)
     
     length_truth = len(close_data.columns) == len(test_stocks)
+    print(f"close_data.cols: {list(close_data.columns)}")
+    print(f"test_stocks: {test_stocks}")
     
     assert tickers_truth and length_truth
 
+# Should add daily returns based on the closing price in its own column
+def test_filter_daily_close_returns(test_stock_data):
+    # Exercise: apply the function to the df
+    df_dcr = utils.filter_daily_close_return(test_stock_data)
+    
+    # Verification: pick a random stock, check a random day's return, check that the next day is correct
+    random_security = test_stocks[random.randint(0, len(test_stocks) - 1)]
+    random_initial_date_index = random.randint(0, len(df_dcr.index) - 2)
+    initial_date = df_dcr.index[random_initial_date_index]
+    next_date = df_dcr.index[random_initial_date_index + 1]
+    # print(f"initial_date_index: {initial_date_index}")
+    
+    initial_close = test_stock_data.loc[initial_date, :]['Close'][random_security]
+    # next_close_index = test_stock_data.loc[next_date_index, :].index + 1
+    final_close = test_stock_data.loc[next_date, :]['Close'][random_security]
+    control_return = (final_close / initial_close) - 1
+    print(df_dcr.head())
+    
+    assert control_return == df_dcr.iloc[random_initial_date_index + 1][random_security]
+
+# def test_add_daily_close_return(test_stock_data):
+#     # Exercise: add the daily return column to each one that reflects the difference b/w closes
+#     augmented_test_stock_data = test_stock_data.copy()
+#     df_augmented = utils.add_daily_close_return(augmented_test_stock_data)
+    
+#     # Verification: Verify that close at iloc[0] * geoprod of all returns = price at iloc[-1] for random
+#     random_stock = test_stocks[random.randint(0, len(test_stocks) - 1)]
+#     c_initial_price = test_stock_data['Close'][random_stock].iloc[0]
+#     c_final_price = test_stock_data['Close'][random_stock].iloc[-1]
+    
+#     total_geo_growth = ((df_augmented['Return'][random_stock] + 1).prod()) - 1
+    
+#     assert c_initial_price * (1 + total_geo_growth) == c_final_price

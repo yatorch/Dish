@@ -28,3 +28,14 @@ def get_latest_mclose_date():
 
 def filter_stocks_close(df):
     return df['Close']
+
+# Returns a copy of the dataframe that only has daily close returns for each security
+def filter_daily_close_return(df):
+    df_copy = df.copy()
+    df_dcr = df_copy['Close'].pct_change().dropna().bfill().ffill()
+    return df_dcr
+
+# Adds a returns column to the 2d yf.downloads() df that has returns on closes for each security
+def add_daily_close_return(df):
+    df['Return'] = df['Close'].pct_change()
+    return df
