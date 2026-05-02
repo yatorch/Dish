@@ -48,7 +48,7 @@ def add_daily_close_return(df):
 # [Close, High, Low, Open, Volume]
 # names=['Price', 'Ticker']
 
-def melt_yf_df(df, only_keep="all"):
+def flatten_yf_df(df, only_keep="all", ):
     copy = df.copy()
     
     tickers = list(copy.columns.get_level_values('Ticker').unique())

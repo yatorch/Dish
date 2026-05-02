@@ -111,13 +111,13 @@ def test_filter_daily_close_returns(test_stock_data):
     
 #     assert c_initial_price * (1 + total_geo_growth) == c_final_price
 
-def test_melt_yf_df(test_stock_data):
+def test_flatten_yf_df(test_stock_data):
     # Exercise: Melt the dataframe into a date + ticker organized one
     print(f"columns: {test_stock_data.columns}")
     print(f"index: {test_stock_data.index}")
     print(f"col level price: {test_stock_data.columns.get_level_values('Price')}")
     print(f"col level ticker: {test_stock_data.columns.get_level_values('Ticker')}")
-    df_molten = utils.melt_yf_df(test_stock_data)
+    df_molten = utils.flatten_yf_df(test_stock_data)
     
     # Verification: Verify that it is correctly uni-dimensional and has all columns
     c_cols = ['Date', 'Ticker', 'Open', 'High', 'Low', 'Close', 'Volume']
