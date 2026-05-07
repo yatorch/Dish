@@ -58,7 +58,7 @@ def test_collect_stocks():
 
     period_truth = actual_time_difference == dataset_time_difference
     
-    print(f"Dataframe columns:\n{exercise_data.columns}")
+    # print(f"Dataframe columns:\n{exercise_data.columns}")
 
     assert column_truth and period_truth
 
@@ -72,8 +72,8 @@ def test_filter_stocks_close(test_stock_data):
     tickers_truth = all(ticker in test_stocks for ticker in close_data_tickers)
     
     length_truth = len(close_data.columns) == len(test_stocks)
-    print(f"close_data.cols: {list(close_data.columns)}")
-    print(f"test_stocks: {test_stocks}")
+    # print(f"close_data.cols: {list(close_data.columns)}")
+    # print(f"test_stocks: {test_stocks}")
     
     assert tickers_truth and length_truth
 
@@ -113,10 +113,10 @@ def test_filter_daily_close_returns(test_stock_data):
 
 def test_flatten_yf_df(test_stock_data):
     # Exercise: Melt the dataframe into a date + ticker organized one
-    print(f"columns: {test_stock_data.columns}")
-    print(f"index: {test_stock_data.index}")
-    print(f"col level price: {test_stock_data.columns.get_level_values('Price')}")
-    print(f"col level ticker: {test_stock_data.columns.get_level_values('Ticker')}")
+    # print(f"columns: {test_stock_data.columns}")
+    # print(f"index: {test_stock_data.index}")
+    # print(f"col level price: {test_stock_data.columns.get_level_values('Price')}")
+    # print(f"col level ticker: {test_stock_data.columns.get_level_values('Ticker')}")
     df_molten = utils.flatten_yf_df(test_stock_data)
     
     # Verification: Verify that it is correctly uni-dimensional and has all columns

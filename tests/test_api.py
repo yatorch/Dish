@@ -52,8 +52,8 @@ def test_endpoint_collect_stocks():
     }
     response = httpx.post(API_LINK + "stocks/batch", json=payload)
     print(Fore.MAGENTA + f"response object: \n{response}")
-    # parsed_response = response.json()
-    df = pd.DataFrame([response['data']])
+    parsed_response = response.json()
+    df = pd.DataFrame.from_records(parsed_response)
 
     print(Fore.MAGENTA + f"Response body: \n{df.head()}")
 
