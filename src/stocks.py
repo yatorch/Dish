@@ -15,3 +15,6 @@ def collect_stocks(tickers, period = '1y', start_date = 0, end_date = 0):
     data = yf.download(tickers=tickers, start=start_date, end=end_date, auto_adjust=True)
     return data
 
+@apimw.log_time_sync_fetch
+def rich_collect_stocks(tickers, period = '1y', start_date = 0, end_date = 0):
+    return "incomplete"
